@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 var (
@@ -26,7 +27,6 @@ func init() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-
 	if UserServiceName == "" {
 		os.Exit(1)
 		return
@@ -42,7 +42,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		log.Printf("Status is: %s\n", string(out))
-		if string(out) == "active" {
+		isItActive := strings.Contains(string(out), "active")
+		if isItActive {
 			w.WriteHeader(http.StatusOK)
 			w.Header().Set("Content-Type", "application/json")
 			resp := make(map[string]string)
